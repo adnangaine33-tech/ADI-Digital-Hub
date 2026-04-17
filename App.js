@@ -1,17 +1,18 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signInWithCustomToken, signInAnonymously } from 'firebase/auth';
 import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { 
-  Search, Clock, Train, PhoneCall, GraduationCap, 
-  Globe, UserCheck, Landmark, FileText, 
-  Coins, Trophy, Target, Rocket, Gem, Crown, 
-  LayoutGrid, Film, PlayCircle, Clapperboard, 
-  Lightbulb, Smartphone, Car, LogIn, Info, Languages, X, Calendar,
-  HeartPulse, Shield, CreditCard, Briefcase, Zap, Map, Tv, MonitorPlay,
-  Gavel, Scale, Droplet, Truck, Camera, Newspaper, Video, Youtube,
-  Flame, Image, Cpu, DollarSign, CloudSun, Moon, Calculator, MapPin, Cloud,
-  Bus, Plane, Siren, LifeBuoy
+  Search, Menu, X, Bell, User, Settings, LogOut, 
+  ChevronRight, Calendar, Star, Layout, Shield, 
+  Smartphone, CreditCard, Bus, MapPin, Briefcase, 
+  ExternalLink, Send, Plus, Trash2, Edit2, CheckCircle2, 
+  Moon, Sun, Globe, Heart, MessageSquare, Image, Video,
+  Music, Gamepad2, Laptop, ShoppingBag, Terminal, Zap,
+  Facebook, Twitter, Instagram, Github, Linkedin, Youtube,
+  Coffee, Palette, Camera, Book, Share2, Filter, 
+  HelpCircle, Info, Lock, Eye, EyeOff, Mail, Phone,
+  Cloud, Download, Upload, RefreshCw, Layers, Grid
 } from 'lucide-react';
 
 // Firebase init
