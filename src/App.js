@@ -1,23 +1,21 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
-import { 
-  Search, Clock, Train, PhoneCall, GraduationCap, 
-  Globe, UserCheck, Landmark, FileText, 
-  Coins, Trophy, Target, Rocket, Gem, Crown, 
-  LayoutGrid, Film, PlayCircle, Clapperboard, 
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import {
+  Search, Clock, Train, PhoneCall, GraduationCap,
+  Globe, UserCheck, Landmark, FileText,
+  Coins, Trophy, Target, Rocket, Gem, Crown,
+  LayoutGrid, Film, PlayCircle, Clapperboard,
   Lightbulb, Smartphone, Car, LogIn, Info, Languages, X, Calendar,
   HeartPulse, Shield, CreditCard, Briefcase, Zap, Map, Tv, MonitorPlay,
   Gavel, Scale, Droplet, Truck, Camera, Newspaper, Video, Youtube,
   Flame, Image, Cpu, DollarSign, CloudSun, Moon, Calculator, MapPin, Cloud,
-  Bus, Plane, Siren, LifeBuoy
+  Bus, Plane, Siren, LifeBuoy, Download, Share2, CheckCircle
 } from 'lucide-react';
 
-// --- Firebase Initialization Safety Fix ---
 let firebaseConfig;
 try {
-  // যদি __firebase_config না থাকে তবে ডিফল্ট ডামি ডাটা নেবে যাতে অ্যাপ ক্রাশ না করে
   firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
     apiKey: "dummy", authDomain: "adi.firebaseapp.com", projectId: "adi"
   };
@@ -35,8 +33,6 @@ if (!getApps().length) {
   auth = getAuth(app);
   db = getFirestore(app);
 }
-
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'adi-digital-ultimate';
 
 const playPremiumSound = () => {
   try {
@@ -70,21 +66,12 @@ const ADILogo = ({ size = 40 }) => (
   </div>
 );
 
-// --- Data Lists (তোমার দেয়া ডাটা) ---
 const simOffers = [
   { id: 's1', nameBn: "GP অফার", nameEn: "GP Offers", icon: Smartphone, color: "#00a9e0", link: "https://www.grameenphone.com/" },
   { id: 's2', nameBn: "রবি অফার", nameEn: "Robi Offers", icon: Smartphone, color: "#e31837", link: "https://www.robi.com.bd/" },
   { id: 's3', nameBn: "BL অফার", nameEn: "BL Offers", icon: Smartphone, color: "#ff8200", link: "https://www.banglalink.net/" },
   { id: 's4', nameBn: "এয়ারটেল অফার", nameEn: "Airtel Offers", icon: Smartphone, color: "#ed1c24", link: "https://www.bd.airtel.com/" },
   { id: 's5', nameBn: "টেলিটক অফার", nameEn: "Teletalk Offers", icon: Smartphone, color: "#77bc1f", link: "http://www.teletalk.com.bd/" }
-];
-
-const earningGames = [
-  { id: 'g1', nameBn: "গোল্ডেন গেম", nameEn: "Golden Game", icon: Trophy, color: "#FFD700", link: "https://yaoqing.kg9993.com/?referralCode=uao9681" },
-  { id: 'g2', nameBn: "মেগা উইন", nameEn: "Mega Win", icon: Crown, color: "#E21313", link: "https://www.77abc.me/?r=nuy0211" },
-  { id: 'g3', nameBn: "বেট মাস্টার", nameEn: "Bet Master", icon: Target, color: "#0075C9", link: "https://www.8999bet11.com/?r=zsh8053" },
-  { id: 'g4', nameBn: "এক্স-লাইট", nameEn: "X-Lite", icon: Rocket, color: "#6EB43F", link: "https://1xlite-08668.world/mobile?bf=731911c8881c4_4731026357" },
-  { id: 'g5', nameBn: "সুপার আর্নিং", nameEn: "Super Earning", icon: Gem, color: "#F47920", link: "https://www.pjok.xin/?r=viz9917" }
 ];
 
 const movieHub = [
@@ -95,7 +82,7 @@ const movieHub = [
 
 const mainServices = [
   { id: 1, nameBn: "জাতীয় পরিচয়পত্র", nameEn: "NID Services", icon: UserCheck, color: "#3b82f6", link: "https://services.nidw.gov.bd/" },
-  { id: 2, nameBn: "রেলওয়ে টিকেট", nameEn: "Railway Ticket", icon: Train, color: "#10b981", link: "https://eticket.railway.gov.bd/" },
+  { id: 2, nameBn: "রেলওয়ে টিকেট", nameEn: "Railway Ticket", icon: Train, color: "#10b981", link: "https://eticket.railway.gov.bd/" },
   { id: 5, nameBn: "৯৯৯ জরুরি সেবা", nameEn: "999 Emergency", icon: PhoneCall, color: "#ef4444", link: "tel:999" },
   { id: 11, nameBn: "চাকরির খবর", nameEn: "Job News", icon: Briefcase, color: "#f43f5e", link: "https://www.bdjobs.com/" },
   { id: 18, nameBn: "চ্যাট জিপিটি", nameEn: "ChatGPT AI", icon: Cpu, color: "#10b981", link: "https://chat.openai.com/" }
@@ -104,31 +91,70 @@ const mainServices = [
 export default function App() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState({ name: "Adi", lang: "bn", savedAt: null });
-  const [tempName, setTempName] = useState("");
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showAbout, setShowAbout] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [installDone, setInstallDone] = useState(false);
 
   useEffect(() => {
     const clock = setInterval(() => setCurrentTime(new Date()), 1000);
-    // যদি অথেন্টিকেশন আটকে যায় তবে ৩ সেকেন্ড পর অটো লোড হবে
     const forceLoad = setTimeout(() => setLoading(false), 3000);
-    
+
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
       setLoading(false);
     });
 
-    return () => { clearInterval(clock); clearTimeout(forceLoad); unsubscribe(); };
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+    }
+
+    return () => {
+      clearInterval(clock);
+      clearTimeout(forceLoad);
+      unsubscribe();
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+    };
   }, []);
 
-  const handleStart = async (e) => {
-    if(e) e.preventDefault();
-    if (!tempName.trim()) return;
-    setUserData({ ...userData, name: tempName.trim() });
+  const handleInstall = async () => {
+    if (installPrompt) {
+      installPrompt.prompt();
+      const { outcome } = await installPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setInstallDone(true);
+        setIsInstalled(true);
+        setInstallPrompt(null);
+      }
+    }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'ADI Digital Hub',
+        text: 'ADI HUB - Bangladesh Digital Services',
+        url: window.location.href
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href).catch(() => {});
+    }
   };
 
   const isBn = userData.lang === "bn";
@@ -138,14 +164,23 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#020617] text-white overflow-x-hidden font-sans">
-      {/* Utility Bar */}
       <div className="px-6 py-2 border-b border-slate-800/50 bg-slate-900/40 text-[10px] font-black uppercase text-center text-yellow-500">
-        <Clock className="inline mr-2" size={12}/> {formatTime(currentTime)} | PREMUM HUB ACTIVE
+        <Clock className="inline mr-2" size={12}/> {formatTime(currentTime)} | PREMIUM HUB ACTIVE
       </div>
 
       <nav className="sticky top-0 z-[100] px-6 py-4 border-b border-slate-800/50 backdrop-blur-xl bg-[#020617]/80 flex items-center justify-between">
-        <div className="flex items-center gap-2"><ADILogo size={45} /><span className="font-black italic text-yellow-500 ml-2 text-lg">ADI HUB</span></div>
-        <button onClick={() => setShowAbout(true)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 text-white"><Info size={20} /></button>
+        <div className="flex items-center gap-2">
+          <ADILogo size={45} />
+          <span className="font-black italic text-yellow-500 ml-2 text-lg">ADI HUB</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowDownload(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-600 text-white text-[11px] font-black uppercase tracking-wider">
+            <Download size={14} /> ডাউনলোড
+          </button>
+          <button onClick={() => setShowAbout(true)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 text-white">
+            <Info size={20} />
+          </button>
+        </div>
       </nav>
 
       <main className="max-w-5xl mx-auto p-4 md:p-6 pb-32">
@@ -155,7 +190,7 @@ export default function App() {
           </h2>
           <div className="relative max-w-xl mx-auto mt-8 group px-4">
             <Search className="absolute left-10 top-1/2 -translate-y-1/2 text-slate-500" size={22} />
-            <input 
+            <input
               type="text" placeholder={isBn ? "সার্ভিস খুঁজুন..." : "Search..."}
               className="w-full pl-16 pr-8 py-6 rounded-full border-2 border-slate-800 bg-slate-900 outline-none focus:border-yellow-500 transition-all shadow-2xl"
               value={search} onChange={(e) => setSearch(e.target.value)}
@@ -163,7 +198,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Tab Filters */}
         <div className="flex gap-3 justify-center mb-10 overflow-x-auto no-scrollbar py-2">
           {['all', 'sim', 'movie', 'earn'].map(tab => (
             <button key={tab} onClick={() => { playPremiumSound(); setActiveTab(tab); }}
@@ -173,14 +207,13 @@ export default function App() {
           ))}
         </div>
 
-        {/* Horizontal Sections */}
         <div className="space-y-12">
           {(activeTab === 'all' || activeTab === 'sim') && (
             <section className="animate-fade-in">
               <h3 className="text-xl font-black italic mb-6 text-blue-500 flex items-center gap-3 px-2"><Smartphone/> সিম অফার</h3>
               <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6 px-2">
                 {simOffers.map(item => (
-                  <div key={item.id} onClick={() => setSelectedItem(item)} className="flex-shrink-0 w-32 p-6 rounded-[2.5rem] bg-slate-900 border-2 border-slate-800 hover:border-yellow-500 transition-all flex flex-col items-center">
+                  <div key={item.id} onClick={() => setSelectedItem(item)} className="flex-shrink-0 w-32 p-6 rounded-[2.5rem] bg-slate-900 border-2 border-slate-800 hover:border-yellow-500 transition-all flex flex-col items-center cursor-pointer">
                     <item.icon size={28} style={{color: item.color}} />
                     <p className="text-[10px] font-black mt-4 text-center">{isBn ? item.nameBn : item.nameEn}</p>
                   </div>
@@ -194,7 +227,7 @@ export default function App() {
               <h3 className="text-xl font-black italic mb-6 text-red-500 flex items-center gap-3 px-2"><Film/> মুভি হাব</h3>
               <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6 px-2">
                 {movieHub.map(item => (
-                  <div key={item.id} onClick={() => setSelectedItem(item)} className="flex-shrink-0 w-32 p-6 rounded-[2.5rem] bg-slate-900 border-2 border-slate-800 hover:border-red-500 transition-all flex flex-col items-center">
+                  <div key={item.id} onClick={() => setSelectedItem(item)} className="flex-shrink-0 w-32 p-6 rounded-[2.5rem] bg-slate-900 border-2 border-slate-800 hover:border-red-500 transition-all flex flex-col items-center cursor-pointer">
                     <item.icon size={28} style={{color: item.color}} />
                     <p className="text-[10px] font-black mt-4 text-center">{isBn ? item.nameBn : item.nameEn}</p>
                   </div>
@@ -204,13 +237,12 @@ export default function App() {
           )}
         </div>
 
-        {/* Main Grid */}
         {activeTab === 'all' && (
           <div className="mt-12 animate-fade-in">
             <h3 className="text-xl font-black italic mb-6 text-emerald-500 flex items-center gap-3 px-2"><LayoutGrid/> ডিজিটাল সেবা</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2">
-              {mainServices.filter(s => s.nameBn.includes(search)).map(s => (
-                <div key={s.id} onClick={() => setSelectedItem(s)} className="p-6 rounded-[3rem] bg-slate-900 border-2 border-slate-800 hover:border-yellow-500 transition-all flex flex-col items-center">
+              {mainServices.filter(s => s.nameBn.includes(search) || s.nameEn.toLowerCase().includes(search.toLowerCase())).map(s => (
+                <div key={s.id} onClick={() => setSelectedItem(s)} className="p-6 rounded-[3rem] bg-slate-900 border-2 border-slate-800 hover:border-yellow-500 transition-all flex flex-col items-center cursor-pointer">
                   <s.icon size={28} style={{color: s.color}} />
                   <h4 className="font-black text-[11px] mt-4 text-center">{isBn ? s.nameBn : s.nameEn}</h4>
                 </div>
@@ -220,7 +252,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Modals */}
       {selectedItem && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center p-6 backdrop-blur-md bg-black/60">
           <div className="relative w-full max-w-sm p-10 rounded-[3rem] bg-slate-900 border border-slate-800 text-center">
@@ -243,6 +274,72 @@ export default function App() {
         </div>
       )}
 
+      {showDownload && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-6 backdrop-blur-2xl bg-black/80">
+          <div className="w-full max-w-md rounded-[3rem] bg-slate-900 border border-slate-800 overflow-hidden">
+            <div className="bg-gradient-to-br from-yellow-600 to-yellow-800 p-8 text-center">
+              <ADILogo size={70} />
+              <h3 className="text-2xl font-black mt-4 text-white">ADI Digital Hub</h3>
+              <p className="text-yellow-200 text-xs font-bold mt-1">v10.0 - Premium Digital Services</p>
+            </div>
+
+            <div className="p-8 space-y-4">
+              {isInstalled || installDone ? (
+                <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-900/30 border border-emerald-700">
+                  <CheckCircle size={22} className="text-emerald-400 flex-shrink-0" />
+                  <div>
+                    <p className="font-black text-emerald-400 text-sm">ইনস্টল সম্পন্ন!</p>
+                    <p className="text-slate-400 text-[11px] mt-0.5">অ্যাপটি আপনার ফোনে ইনস্টল হয়েছে।</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {installPrompt ? (
+                    <button onClick={handleInstall} className="w-full py-4 rounded-2xl bg-yellow-600 text-white font-black uppercase flex items-center justify-center gap-3 text-sm">
+                      <Download size={18} /> ফোনে ইনস্টল করুন
+                    </button>
+                  ) : (
+                    <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700">
+                      <p className="font-black text-yellow-500 text-sm mb-3">ম্যানুয়াল ইনস্টল গাইড</p>
+                      <div className="space-y-3 text-left">
+                        <div className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-yellow-600 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+                          <p className="text-slate-300 text-[12px] font-bold">Android: Chrome ব্রাউজারে মেনু আইকন (<span className="text-yellow-500">⋮</span>) ক্লিক করুন</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-yellow-600 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+                          <p className="text-slate-300 text-[12px] font-bold">"Add to Home screen" বা "হোম স্ক্রিনে যোগ করুন" সিলেক্ট করুন</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-yellow-600 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+                          <p className="text-slate-300 text-[12px] font-bold">iPhone: Safari-এ Share বাটন চাপুন, তারপর "Add to Home Screen"</p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="w-6 h-6 rounded-full bg-yellow-600 text-white text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
+                          <p className="text-slate-300 text-[12px] font-bold">"Add / যোগ করুন" বাটনে ক্লিক করুন - ইনস্টল সম্পন্ন!</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              <button onClick={handleShare} className="w-full py-4 rounded-2xl bg-slate-800 border border-slate-700 text-white font-black uppercase flex items-center justify-center gap-3 text-sm">
+                <Share2 size={18} /> লিংক শেয়ার করুন
+              </button>
+
+              <div className="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/50">
+                <p className="text-slate-500 text-[11px] font-bold text-center">ইন্টারনেট ছাড়াও ব্যবহার করা যাবে (Offline Support)</p>
+              </div>
+            </div>
+
+            <div className="px-8 pb-8">
+              <button onClick={() => setShowDownload(false)} className="w-full py-3 text-slate-500 font-black text-sm">বন্ধ করুন</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -254,4 +351,4 @@ export default function App() {
       `}</style>
     </div>
   );
-  }
+}
